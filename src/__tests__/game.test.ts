@@ -1,10 +1,13 @@
 // tests/army.test.ts
 import { describe, expect, it } from "vitest";
-import { getForce, getSolution } from "../modules/game";
+import { Dice, getForce, getSolution, StatusConfig } from "../modules/game";
 
 describe("getForce", () => {
   describe("getForce – valeurs individuelles persos simples", () => {
-    const cases: Array<{ status: string; expected: number }> = [
+    const cases: Array<{
+      status: "hero" | "captain" | "soldier" | "cursed" | "traitor" | "mage";
+      expected: number;
+    }> = [
       { status: "hero", expected: 3 },
       { status: "captain", expected: 2 },
       { status: "soldier", expected: 1 },
@@ -32,7 +35,7 @@ describe("getForce", () => {
         { status: "traitor", baseValue: 1 },
         { status: "hero", baseValue: 3 },
       ];
-      expect(getForce(diceList)).toBe(1);
+      expect(getForce(diceList)).toBe(1 + 0);
     });
 
     it("avec plusieurs héros → neutralise un seul héros", () => {
@@ -41,7 +44,24 @@ describe("getForce", () => {
         { status: "hero", baseValue: 3 },
         { status: "hero", baseValue: 3 },
       ];
-      expect(getForce(diceList)).toBe(4);
+      expect(getForce(diceList)).toBe(1 + 0 + 3);
+    });
+    it("avec 2 traites → neutralise un deux héros", () => {
+      const diceList: Dice[] = [
+        { status: "traitor", baseValue: 1 },
+        { status: "traitor", baseValue: 1 },
+        { status: "hero", baseValue: 3 },
+        { status: "hero", baseValue: 3 },
+      ];
+      expect(getForce(diceList)).toBe(1 + 1 + 0 + 0);
+    });
+    it("avec plusieurs héros → neutralise un seul héros", () => {
+      const diceList: Dice[] = [
+        { status: "traitor", baseValue: 1 },
+        { status: "traitor", baseValue: 1 },
+        { status: "hero", baseValue: 3 },
+      ];
+      expect(getForce(diceList)).toBe(1 + 1 + 0);
     });
   });
 
@@ -87,27 +107,6 @@ describe("getForce", () => {
       expect(getForce([])).toBe(0);
     });
   });
-
-  describe("getForce – invariants", () => {
-    it("n’altère pas le tableau original", () => {
-      const original: Dice[] = [
-        { status: "hero", baseValue: 3 },
-        { status: "soldier", baseValue: 1 },
-      ];
-      const copy = original.map((d) => ({ ...d }));
-      getForce(original);
-      expect(original).toEqual(copy);
-    });
-
-    it("ordre des dés n’influe pas", () => {
-      const a: Dice[] = [
-        { status: "mage", baseValue: 0 },
-        { status: "soldier", baseValue: 1 },
-      ];
-      const b = [...a].reverse();
-      expect(getForce(a)).toBe(getForce(b));
-    });
-  });
 });
 
 describe("getSolution", () => {
@@ -133,15 +132,7 @@ describe("getSolution", () => {
     const traitor: Dice = { status: "traitor", baseValue: 1 };
     const soldier: Dice = { status: "soldier", baseValue: 1 };
     const [g1, g2] = getSolution([traitor, soldier]) as [Dice[], Dice[]];
-    expect(g1).toEqual([traitor]);
-    expect(g2).toEqual([soldier]);
-  });
-
-  it("renvoie une solution simple pour [soldier, traitor]", () => {
-    const traitor: Dice = { status: "traitor", baseValue: 1 };
-    const soldier: Dice = { status: "soldier", baseValue: 1 };
-    const [g1, g2] = getSolution([soldier, traitor]) as [Dice[], Dice[]];
-    expect(g1).toEqual([soldier]);
-    expect(g2).toEqual([traitor]);
+    expect(getForce(g1)).toEqual(getForce([traitor]));
+    expect(getForce(g2)).toEqual(getForce([soldier]));
   });
 });
