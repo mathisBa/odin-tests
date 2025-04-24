@@ -23,11 +23,7 @@ jobs:
         run: npm install
 
       - name: Run Vitest and output JUnit report
-        run: |
-          npx vitest run \
-            --reporter default \
-            --reporter junit \
-            --outputFile doc.xml
+        run: npm run vitest
 
       - name: Upload test results
         if: always()
