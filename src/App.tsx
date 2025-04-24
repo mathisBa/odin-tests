@@ -88,7 +88,7 @@ function App() {
       <button onClick={reset}>Nouvelle tirage</button>
       <div className="boards">
         {["unassigned", "A", "B"].map((board) => (
-          <div key={board} className="board">
+          <div key={board} className="board" id={board}>
             <h2>{board === "unassigned" ? "À répartir" : `Groupe ${board}`}</h2>
             <div className="dice-row">
               {diceList.map(
