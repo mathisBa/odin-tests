@@ -40,3 +40,34 @@
 .read-the-docs {
   color: #888;
 }
+
+.App {
+  font-family: sans-serif;
+  padding: 1rem;
+}
+.boards {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.board {
+  flex: 1;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+}
+.dice-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.die {
+  padding: 0.5rem 1rem;
+  border: 1px solid #333;
+  background: #fafafa;
+  cursor: pointer;
+  color: #333;
+}
+.message {
+  margin-top: 1rem;
+  font-weight: bold;
+}
