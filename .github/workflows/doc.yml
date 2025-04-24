@@ -20,12 +20,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Vitest and output JUnit report
+      - name: Run Vitest tests
         run: npm run vitest
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: vitest-junit-report
-          path: doc.xml
