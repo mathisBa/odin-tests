@@ -125,7 +125,7 @@ describe("getSolution", () => {
       { status: "soldier", baseValue: 1 },
       { status: "hero", baseValue: 3 },
     ];
-    expect(getSolution(diceList)).toThrowError();
+    expect(() => getSolution(diceList)).toThrowError("No solution found");
   });
 
   it("renvoie une solution simple pour [traitor, soldier]", () => {
