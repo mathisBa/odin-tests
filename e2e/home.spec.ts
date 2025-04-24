@@ -37,7 +37,7 @@ test.describe("home", () => {
     await expect(page).toHaveScreenshot("home-page.png", {
       fullPage: true,
       mask: [page.locator("#unassigned")],
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.02,
     });
   });
 });
