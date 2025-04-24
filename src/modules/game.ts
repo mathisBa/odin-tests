@@ -85,3 +85,31 @@ export function getAllPartitions<T>(arr: T[]): Array<[T[], T[]]> {
 
   return result;
 }
+
+export function haveSameDice(a: Dice[], b: Dice[]): boolean {
+  if (a.length !== b.length) return false;
+
+  // On crée une clé unique par dé (status + baseValue)
+  const keyOf = (d: Dice) => `${d.status}:${d.baseValue}`;
+
+  // Comptage des dés de la première liste
+  const freq = new Map<string, number>();
+  for (const d of a) {
+    const key = keyOf(d);
+    freq.set(key, (freq.get(key) ?? 0) + 1);
+  }
+
+  // On décrémente au fur et à mesure avec la seconde liste
+  for (const d of b) {
+    const key = keyOf(d);
+    const count = freq.get(key);
+    if (count == null || count === 0) {
+      // Soit ce dé n'existait pas, soit on en a déjà consommé tous les exemplaires
+      return false;
+    }
+    freq.set(key, count - 1);
+  }
+
+  // Si tous les compteurs sont retombés à zéro, les deux listes sont équivalentes
+  return Array.from(freq.values()).every((count) => count === 0);
+}

@@ -1,6 +1,13 @@
 // tests/army.test.ts
 import { describe, expect, it } from "vitest";
-import { Dice, getForce, getSolution, StatusConfig } from "../modules/game";
+import {
+  Dice,
+  getForce,
+  getSolution,
+  haveSameDice,
+  StatusConfig,
+} from "../modules/game";
+import { challenges } from "../__mocks__/challenges";
 
 describe("getForce", () => {
   describe("getForce – valeurs individuelles persos simples", () => {
@@ -134,5 +141,19 @@ describe("getSolution", () => {
     const [g1, g2] = getSolution([traitor, soldier]) as [Dice[], Dice[]];
     expect(getForce(g1)).toEqual(getForce([traitor]));
     expect(getForce(g2)).toEqual(getForce([soldier]));
+  });
+});
+
+describe("Défis Par Odin (notice mockée)", () => {
+  challenges.forEach(({ id, dice, solution }) => {
+    it(`défi #${id} → doit renvoyer la partition attendue`, () => {
+      const result = getSolution(dice);
+      expect(result).not.toBeNull();
+
+      const [g1, g2] = result!;
+
+      expect(haveSameDice(g1, solution[0])).toBeTruthy;
+      expect(haveSameDice(g2, solution[1])).toBeTruthy;
+    });
   });
 });
