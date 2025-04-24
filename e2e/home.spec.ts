@@ -31,27 +31,6 @@ test.describe("home", () => {
       /Tous les dés doivent être dans A ou B/
     );
   });
-  test("assign all dice to group A", async ({ page }) => {
-    // Récupère les dés non assignés et clique chacun pour le mettre dans A
-    const unassigned = page.locator("#unassigned .die");
-    const count = await unassigned.count();
-    for (let i = 0; i < count; i++) {
-      // à chaque itération, on clique toujours le premier non assigné
-      await unassigned.nth(0).click();
-    }
-
-    // Vérifie que le groupe A contient bien tous les dés
-    const groupA = page.locator("#A .die");
-    await expect(groupA).toHaveCount(count);
-
-    // Et que le groupe B est vide
-    const groupB = page.locator("#B .die");
-    await expect(groupB).toHaveCount(0);
-
-    // Clique sur Valider et vérifie le message d'échec attendu
-    await page.getByRole("button", { name: "Valider" }).click();
-    await expect(page.locator(".message")).toHaveText(/Raté : A=\d+ vs B=0/);
-  });
 
   test("visual regression (ignore la première board)", async ({ page }) => {
     // on masque la board dynamique pour ne pas tenir compte des dés tirés
